@@ -3,149 +3,431 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Currículo</title>
+    <title>Calculadora de Juros Compostos</title>
     <style>
-        /* Estilos gerais */
-        body {
-            font-family: Arial, sans-serif;
-            color: #333;
-            background-color: #f3f4f6;
-            margin: 0;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 10;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        /* Cabeçalho */
-        header {
-            text-align: center;
-            padding: 20px 0;
-            border-bottom: 2px solid #0073e6;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .profile-pic {
-            width: 150px; /* Tamanho da imagem */
-            height: 150px;
-            border-radius: 50%; /* Torna a imagem circular */
-            object-fit: cover;
-            border: 3px solid #0073e6;
-            margin-bottom: 10px;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 2em;
-            color: #0073e6;
-        }
-        header p {
-            margin: 5px 0;
-            color: #666;
-        }
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
 
-        /* Sessões */
-        .section {
-            margin-top: 30px;
-        }
-        .section h2 {
-            font-size: 1.5em;
-            color: #333;
-            border-bottom: 2px solid #0073e6;
-            padding-bottom: 5px;
-            margin-bottom: 15px;
-        }
-        .section p {
-            line-height: 1.6;
-            color: #666;
-        }
+    header .logo {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
 
-        /* Estilos para a experiência e educação */
-        .section-item {
-            margin-bottom: 15px;
-        }
-        .section-item h3 {
-            color: #0073e6;
-            margin: 0;
-        }
-        .section-item h4 {
-            color: #555;
-            margin: 5px 0;
-            font-weight: normal;
-        }
+    nav ul {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+        margin: 0;
+        padding: 0;
+    }
 
-        /* Links e botões */
-        .contact {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .contact a {
-            text-decoration: none;
-            color: #0073e6;
-            border: 1px solid #0073e6;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin: 5px;
-            transition: background-color 0.3s;
-        }
-        .contact a:hover {
-            background-color: #0073e6;
-            color: #fff;
-        }
-    </style>
+    nav ul li {
+        cursor: pointer;
+    }
+
+    nav ul li:hover {
+        text-decoration: underline;
+    }
+
+    footer {
+        text-align: center;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        margin-top: 20px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        position: relative;
+    }
+
+    table {
+        width: 100%;
+        max-width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        border-radius: 10px;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+        text-align: center;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .highlight {
+        background-color: #FFD700;
+        font-weight: bold;
+    }
+
+    .year-summary {
+        background-color: #d0ebff;
+        font-weight: bold;
+    }
+
+    .results-table {
+        width: 100%;
+        max-width: 800px;
+        margin-top: 30px;
+        border-collapse: collapse;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 0 auto;
+    }
+
+    .results-table th {
+        background-color: #5dc2c8;
+        color: white;
+    }
+
+    .results-table td, .results-table th {
+        padding: 10px;
+        text-align: center;
+    }
+
+    tbody tr:nth-child(odd):not(.highlight):not(.year-summary) {
+        background-color: #e0e0e0; /* Cinza mais forte */
+    }
+
+    tbody tr:nth-child(even):not(.highlight):not(.year-summary) {
+        background-color: #f5f5f5; /* Cinza claro (substituindo o branco) */
+    }
+
+    /* Garantir que o conteúdo não ultrapasse a largura da tela */
+    * {
+        box-sizing: border-box;
+    }
+
+    /* Ajustando a largura da tabela de resultados para 50/50 */
+    .results-table th, .results-table td {
+        width: 50%;
+    }
+
+    .results-table td {
+        text-align: left;
+    }
+
+    /* Formulário de entrada */
+    .input-form {
+        margin: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 400px;
+        margin: 0 auto;
+        border-radius: 10px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-form input {
+        padding: 10px;
+        font-size: 1em;
+        width: 100%;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .input-form button {
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .input-form button:hover {
+        background-color: #45a049;
+    }
+
+    /* Botões flutuantes */
+    .scroll-to-top, .scroll-to-footer {
+        position: fixed;
+        bottom: 20px; /* Ajuste de altura */
+        right: 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 20px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s;
+        z-index: 1000; /* Garantir que o botão esteja sobre outros elementos */
+        text-decoration: none;
+    }
+
+    .scroll-to-top:hover, .scroll-to-footer:hover {
+        background-color: #45a049;
+    }
+
+    .scroll-to-footer {
+        bottom: 90px; /* Ajuste de altura para que o botão do topo fique acima dele */
+    }
+
+    /* Ajuste do footer para ficar no final da página */
+    footer {
+        position: relative;
+        bottom: 0;
+    }
+
+</style>
+
 </head>
 <body>
-    <div class="container">
-        <header>
-            <img src="foto_perfil.jpg" alt="Foto de perfil" class="profile-pic">
-            <h1>Gabriel Araújo</h1>
-            <p>Autônomo | Hortolândia, São Paulo</p>
-        </header>
+    <header>
+        <div class="logo">Meu Logo</div>
+        <nav>
+            <ul>
+                <li>Início</li>
+                <li>Sobre</li>
+                <li>Contato</li>
+            </ul>
+        </nav>
+    </header>
+    <br>
 
-        <section class="section">
-            <h2>Sobre</h2>
-            <p>Sou um profissional dedicado e proativo, com experiência em áreas diversas e uma grande paixão pelo desenvolvimento de soluções eficazes para problemas complexos. Tenho facilidade em me relacionar com pessoas, resolver problemas administrativos e gosto de lógica.</p>
-        </section>
+    <div class="content">
+        <h1 style="text-align: center; margin-top: 20px;">Calculadora de Juros Compostos com Aportes Mensais</h1>
 
-        <section class="section">
-            <h2>Experiência</h2>
-            <div class="section-item">
-                <h3>Léobis Cortes Especiais</h3>
-                <h4>Ajudante de Produção - 2019 a 2024 </h4>
-                <p>Criação de Entregáveis, análise e atualização de documentos existentes e produção de logs através de macros no Excel.</p>
+        <!-- Formulário de entrada de dados -->
+        <div class="input-form">
+            <div>
+                <label for="capitalInicial">Valor Inicial (R$):</label>
+                <input type="text" id="capitalInicial" placeholder="Ex: 1000,00" required oninput="formatarCampo(this)">
             </div>
-            <div class="section-item">
-                <h3></h3>
-                <h4>Validação de Software Júnior - 06/2024 a 09/2024 </h4>
-                <p>Essa empresa é do meu pai, então, acabei exercendo várias funções na mesma. Tais como, calcular dados, realizar cortes e soldas, e também, coordenava as linhas de produção. Definindo funções e Ritmo de Trabalho.</p>
-            </div>
-        </section>
 
-        <section class="section">
-            <h2>Educação</h2>
-            <div class="section-item">
-                <h3>IFSP-HT</h3>
-                <h4>Ensino Médio Técnico (Informática) - 2021</h4>
+            <div>
+                <label for="taxaJuros">Taxa de Juros (% ao mês):</label>
+                <input type="text" id="taxaJuros" placeholder="Ex: 1,5" required oninput="formatarCampo(this)">
             </div>
-            <div class="section-item">
-                <h3>UNASP-HT</h3>
-                <h4>Sistemas de Informação - 06/2026</h4>
-            </div>
-        </section>
 
-        <section class="section">
-            <h2>Contato</h2>
-            <div class="contact">
-                <a href="mailto:gpa9068@gmail.com">Email</a>
-                <a href="https://www.linkedin.com/in/gabriel-araújo-921820234/" target="_blank">LinkedIn</a>
-                <a href="https://github.com/gabrielpAraujo" target="_blank">GitHub</a>
+            <div>
+                <label for="aporteMensal">Aporte Mensal (R$):</label>
+                <input type="text" id="aporteMensal" placeholder="Ex: 300,00" required oninput="formatarCampo(this)">
             </div>
-        </section>
+
+            <div>
+                <label for="periodo">Período (meses):</label>
+                <input type="number" id="periodo" placeholder="Ex: 360" required oninput="formatarCampo(this)">
+            </div>
+
+            <div>
+                <label for="inflacaoMensal">Inflação Mensal (%):</label>
+                <input type="text" id="inflacaoMensal" placeholder="Ex: 0,5" required oninput="formatarCampo(this)">
+            </div>
+
+            <button onclick="calcular()">Calcular</button>
+        </div>
+
+        <br>
+
+        <table id="resultTable">
+            <thead>
+                <tr>
+                    <th>Mês</th>
+                    <th>Valor Investido no Mês</th>
+                    <th>Ganho com Juros no Mês</th>
+                    <th>Montante Acumulado</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        
+        <br><br>
+        
+        <table class="results-table">
+            <tr>
+                <th colspan="2" style="background-color: #269096;"><h2>Resultados</h2></th>
+            </tr>
+            <tr>
+                <th>Total Investido</th>
+                <td id="totalInvestido"></td>
+            </tr>
+            <tr>
+                <th>Total Ganho em Juros</th>
+                <td id="totalJuros"></td>
+            </tr>
+            <tr>
+                <th>Montante Final</th>
+                <td id="montanteFinal"></td>
+            </tr>
+            <tr>
+                <th>Valor Ajustado pela Inflação</th>
+                <td id="valorAjustadoInflacao"></td>
+            </tr>
+            <tr>
+                <th>Desvalorização pela Inflação</th>
+                <td id="desvalorizacao"></td>
+            </tr>
+        </table>
+        <br>
     </div>
+
+    <footer id="footer">
+        © 2024 Calculadora de Juros Compostos. Todos os direitos reservados.
+    </footer>
+    
+    <script>
+        function formatarNumero(valor) {
+            return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function formatarCampo(campo) {
+            let valor = campo.value.replace(/\D/g, ''); // Remove tudo que não é número
+
+            if (campo.id === 'taxaJuros' || campo.id === 'inflacaoMensal') {
+                if (valor.length === 0) {
+                    campo.value = '0,00%';
+                } else if (valor.length === 1) {
+                    campo.value = '0,0' + valor + '%';
+                } else if (valor.length === 2) {
+                    campo.value = '0,' + valor + '%';
+                } else {
+                    valor = valor.replace(/^0+/, ''); // Remove zeros à esquerda
+                    valor = valor.replace(/(\d{1,})(\d{2})$/, '$1,$2'); // Adiciona vírgula para os centavos
+                    campo.value = valor + '%';
+                }
+
+                // Posiciona o cursor antes do símbolo '%'
+                setTimeout(() => campo.setSelectionRange(campo.value.length - 1, campo.value.length - 1), 0);
+            } 
+            else if (campo.id === 'periodo') {
+                // Apenas números permitidos para o campo de período
+                campo.value = valor;
+            } 
+            else {
+                // Para os campos monetários
+                if (valor.length <= 2) {
+                    // Formata como "R$ 0,X" ou "R$ 0,XX" para valores pequenos
+                    campo.value = 'R$ 0,' + valor.padStart(2, '0');
+                } else {
+                    // Formata valores maiores com separador de milhar (ponto) e separador de centavos (vírgula)
+                    valor = valor.replace(/(\d)(\d{2})$/, '$1,$2'); // Adiciona vírgula para centavos
+                    campo.value = 'R$ ' + valor.replace(/^0+/, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Remove os zeros extras e adiciona o ponto como separador de milhar
+                }
+                    }
+        }
+
+
+
+
+
+
+
+        function calcular() {
+            // Coleta e formata os valores do formulário
+            const P = parseFloat(document.getElementById('capitalInicial').value.replace(/[R$\.\s]/g, '').replace(',', '.'));
+            const r = parseFloat(document.getElementById('taxaJuros').value.replace('%', '').replace(',', '.')) / 100;
+            const A = parseFloat(document.getElementById('aporteMensal').value.replace(/[R$\.\s]/g, '').replace(',', '.'));
+            const n = parseInt(document.getElementById('periodo').value);
+            const inflacaoMensal = parseFloat(document.getElementById('inflacaoMensal').value.replace('%', '').replace(',', '.')) / 100;
+
+            // Validação dos valores
+            if (isNaN(P) || isNaN(r) || isNaN(A) || isNaN(n) || isNaN(inflacaoMensal)) {
+                alert("Por favor, preencha todos os campos corretamente.");
+                return; // Interrompe se houver valores inválidos
+            }
+
+            let totalInvestido = 0;
+            let montante = P;
+            let tbody = document.querySelector('#resultTable tbody');
+            let aporteMensalAtual = A;
+            let somaInvestidoAno = 0;
+            let somaJurosAno = 0;
+
+            tbody.innerHTML = ''; // Limpa a tabela antes de calcular
+
+            for (let mes = 1; mes <= n; mes++) {
+                let investidoMes = aporteMensalAtual;
+                totalInvestido += investidoMes;
+                somaInvestidoAno += investidoMes;
+
+                let montanteAntesJuros = montante + investidoMes;
+                montante = montanteAntesJuros * (1 + r);
+                let ganhoJurosMes = montante - montanteAntesJuros;
+                somaJurosAno += ganhoJurosMes;
+
+                let rowClass = mes % 12 === 0 ? 'highlight' : '';
+                tbody.innerHTML += `
+                    <tr class="${rowClass}">
+                        <td>${mes}</td>
+                        <td>R$ ${formatarNumero(investidoMes)}</td>
+                        <td>R$ ${formatarNumero(ganhoJurosMes)}</td>
+                        <td>R$ ${formatarNumero(montante)}</td>
+                    </tr>`;
+
+                if (mes % 12 === 0) {
+                    tbody.innerHTML += `
+                        <tr class="year-summary">
+                            <td><strong>Total Ano ${mes / 12}</strong></td>
+                            <td>R$ ${formatarNumero(somaInvestidoAno)}</td>
+                            <td>R$ ${formatarNumero(somaJurosAno)}</td>
+                            <td></td>
+                        </tr>`;
+                    somaInvestidoAno = 0;
+                    somaJurosAno = 0;
+                }
+
+                // Ajuste do aporte mensal pela inflação
+                aporteMensalAtual *= (1 + inflacaoMensal);
+            }
+
+            // Exibe os resultados gerais
+            document.getElementById('totalInvestido').innerText = `R$ ${formatarNumero(totalInvestido)}`;
+            document.getElementById('totalJuros').innerText = `R$ ${formatarNumero(montante - totalInvestido)}`;
+            document.getElementById('montanteFinal').innerText = `R$ ${formatarNumero(montante)}`;
+
+            // Ajuste pela inflação
+            let valorAjustado = montante / Math.pow(1 + inflacaoMensal, n);
+            document.getElementById('valorAjustadoInflacao').innerText = `R$ ${formatarNumero(valorAjustado)}`;
+
+            let desvalorizacao = montante / valorAjustado;
+            document.getElementById('desvalorizacao').innerText = `Se desvalorizou ${formatarNumero(desvalorizacao)} vezes.`;
+
+            // Exibir as tabelas
+            document.getElementById('resultTable').style.display = 'table';
+            document.querySelector('.results-table').style.display = 'table';
+        }
+
+
+    </script>
+
+    <!-- Botões flutuantes com links âncoras -->
+    <a href="#footer" class="scroll-to-footer">&#8595;</a>
+    <a href="#top" class="scroll-to-top">&#8593;</a>
 </body>
-</html>	
-	
+</html>
